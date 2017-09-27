@@ -19,5 +19,6 @@ sizeBrowsertop();
 createContextItems();
 
 fillFolder('1', browsertop);
-
-let galFol = openFolder('27');
+setTimeout(function () {
+  createFolderLinks();
+}, 100);

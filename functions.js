@@ -45,7 +45,7 @@ function createIconFromBookmark (bookmark) {
     let url = bookmark.url;
     let faviconString = `chrome://favicon/${url}`
     iconHTML =
-    `<a class="bt-shortcut draggable ${bookmarkID}" href="${url}">
+    `<a class="bt-shortcut ${bookmarkID}" href="${url}">
       <div class="icon-pic">
         <img src=${faviconString}>
       </div>
@@ -56,7 +56,7 @@ function createIconFromBookmark (bookmark) {
   } else if (Array.isArray(bookmark.children)) {
     let folderIcon = `<img class="icon icons8-Folder" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNDAgNDAiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQwIDQwOyIgZmlsbD0iI2ZhbHNlIiA+PGc+CTxwb2x5Z29uIHN0eWxlPSJmaWxsOiNEQkIwNjU7IiBwb2ludHM9IjEuNSwzNS41IDEuNSw0LjUgMTEuNzkzLDQuNSAxNC43OTMsNy41IDM4LjUsNy41IDM4LjUsMzUuNSAJIj48L3BvbHlnb24+CTxnPgkJPHBhdGggc3R5bGU9ImZpbGw6Izk2N0E0NDsiIGQ9Ik0xMS41ODYsNWwyLjcwNywyLjcwN0wxNC41ODYsOEgxNWgyM3YyN0gyVjVIMTEuNTg2IE0xMiw0SDF2MzJoMzhWN0gxNUwxMiw0TDEyLDR6Ij48L3BhdGg+CTwvZz48L2c+PGc+CTxwb2x5Z29uIHN0eWxlPSJmaWxsOiNGNUNFODU7IiBwb2ludHM9IjEuNSwzNS41IDEuNSw5LjUgMTIuMTUxLDkuNSAxNS4xNTEsNy41IDM4LjUsNy41IDM4LjUsMzUuNSAJIj48L3BvbHlnb24+CTxnPgkJPHBhdGggc3R5bGU9ImZpbGw6Izk2N0E0NDsiIGQ9Ik0zOCw4djI3SDJWMTBoMTBoMC4zMDNsMC4yNTItMC4xNjhMMTUuMzAzLDhIMzggTTM5LDdIMTVsLTMsMkgxdjI3aDM4VjdMMzksN3oiPjwvcGF0aD4JPC9nPjwvZz48L3N2Zz4='/>`
     iconHTML =
-    `<a class="bt-shortcut draggable ${bookmarkID}" href="#">
+    `<a class="bt-shortcut folder ${bookmarkID}" href="#">
       <div class="icon-pic" style="background: rgba(255,255,255,0)">
         ${folderIcon}
       </div>
@@ -78,6 +78,17 @@ function getIdFromElement (element) {
 
 function openFolder (subTreeId) {
   return window.open("new-window.html", `Folder_${subTreeId}`,"width=500,height=300,scrollbar=yes")
+}
+
+function createFolderLinks () {
+  var allFolders = document.querySelectorAll('.folder');
+  for (let i = 0; i < allFolders.length; i++) {
+    console.log('got in the loop!');
+    allFolders[i].addEventListener('click', function (event) {
+      let bookmarkId = allFolders[i].classList[event.target.classList.length];
+      openFolder(bookmarkId);
+    });
+  }
 }
 
 function populateFolderHTML () {
