@@ -39,7 +39,7 @@ function createIconFromBookmark (bookmark) {
     let url = bookmark.url;
     let faviconString = `chrome://favicon/${url}`
     iconHTML =
-    `<a class="bt-shortcut ${bookmarkID}" href="${url}">
+    `<a class="bt-shortcut ${bookmarkID}" target="_blank" href="${url}">
       <div class="icon-pic">
         <img src=${faviconString}>
       </div>
@@ -107,4 +107,9 @@ function populateFolderHTML () {
     folderContain.classList.add(`${folderNode}`)
   });
   fillFolder(folderNode, folderSpace);
+}
+
+function storeBaseWindow () {
+  let currentWindow = window.
+  localStorage.setItem('originalWindow', JSON.stringify(''))
 }
