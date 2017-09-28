@@ -31,14 +31,6 @@ function createContextItems () {
   }
 }
 
-function fillFolder (subTreeId, browsertopSpace) {
-  chrome.bookmarks.getSubTree(subTreeId, function(mark) {
-    for (let i = 0; i < mark[0].children.length; i++) {
-      browsertopSpace.innerHTML += createIconFromBookmark(mark[0].children[i]);
-    }
-  })
-}
-
 function createIconFromBookmark (bookmark) {
   let iconHTML = ``;
   let text = bookmark.title;
@@ -84,7 +76,9 @@ function openFolder (subTreeId) {
 
 function createFolderLinks () {
   var allFolders = document.querySelectorAll('.folder');
-  console.log('in createFolderLinks')
+  console.log('in createFolderLinks');
+  console.log('allFolders:', allFolders);
+  console.log('allFolders.length:', allFolders.length);
   for (let i = 0; i < allFolders.length; i++) {
     console.log('got in the loop!');
     allFolders[i].addEventListener('click', function (event) {
@@ -92,6 +86,15 @@ function createFolderLinks () {
       openFolder(bookmarkId);
     });
   }
+}
+
+function fillFolder (subTreeId, browsertopSpace, linkCreationFunction = createFolderLinks) {
+  chrome.bookmarks.getSubTree(subTreeId, function(mark) {
+    for (let i = 0; i < mark[0].children.length; i++) {
+      browsertopSpace.innerHTML += createIconFromBookmark(mark[0].children[i]);
+    }
+    linkCreationFunction();
+  })
 }
 
 function populateFolderHTML () {
@@ -104,9 +107,4 @@ function populateFolderHTML () {
     folderContain.classList.add(`${folderNode}`)
   });
   fillFolder(folderNode, folderSpace);
-}
-
-function fill (folderFillFunction, folderLinkFunction, subTreeId, folderSpace) {
-  let hold = folderFillFunction(subTreeId, folderSpace);
-  hold = folderLinkFunction();
 }
