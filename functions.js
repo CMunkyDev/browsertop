@@ -12,10 +12,12 @@ function removeContextItems () {
   chrome.contextMenus.remove('remove-bookmark');
 
   chrome.contextMenus.remove('hide-bookmark');
+
+  localStorage.setItem('contextCreated', JSON.stringify(false));
 }
 
 function createContextItems () {
-  if (!localStorage.getItem('contextCreated')) {
+  if (!JSON.parse(localStorage.getItem('contextCreated'))) {
     chrome.contextMenus.create({'id':'create-bookmark', 'title':'Create New Bookmark', 'onclick':function () {
       console.log('lol like I would.')
       }
@@ -25,7 +27,7 @@ function createContextItems () {
 
     chrome.contextMenus.create({'id':'hide-bookmark', 'title':'Hide Bookmark', 'contexts':['link']});
 
-    localStorage.setItem('contextCreated', true);
+    localStorage.setItem('contextCreated', JSON.stringify(true));
   }
 }
 
@@ -82,10 +84,11 @@ function openFolder (subTreeId) {
 
 function createFolderLinks () {
   var allFolders = document.querySelectorAll('.folder');
+  console.log('in createFolderLinks')
   for (let i = 0; i < allFolders.length; i++) {
     console.log('got in the loop!');
     allFolders[i].addEventListener('click', function (event) {
-      let bookmarkId = allFolders[i].classList[event.target.classList.length];
+      let bookmarkId = allFolders[i].classList[allFolders[i].classList.length - 1];
       openFolder(bookmarkId);
     });
   }
@@ -94,9 +97,16 @@ function createFolderLinks () {
 function populateFolderHTML () {
   let folderNode = window.name.split('_')[1];
   var title = document.querySelector('title');
+  var folderContain = document.querySelector('.folder-container');
   var folderSpace = document.querySelector('.folder-container');
   chrome.bookmarks.getSubTree(folderNode, function (tree) {
     title.innerHTML = `${tree[0].title}`;
+    folderContain.classList.add(`${folderNode}`)
   });
   fillFolder(folderNode, folderSpace);
+}
+
+function fill (folderFillFunction, folderLinkFunction, subTreeId, folderSpace) {
+  let hold = folderFillFunction(subTreeId, folderSpace);
+  hold = folderLinkFunction();
 }

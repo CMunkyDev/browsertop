@@ -19,6 +19,5 @@ sizeBrowsertop();
 createContextItems();
 
 fillFolder('1', browsertop);
-setTimeout(function () {
-  createFolderLinks();
-}, 100);
+
+createFolderLinks();

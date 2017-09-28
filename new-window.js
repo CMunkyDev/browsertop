@@ -1,5 +1,3 @@
 populateFolderHTML();
 
-setTimeout(function () {
-  createFolderLinks();
-}, 100);
+createFolderLinks();
