@@ -30,34 +30,37 @@ function createContextItems () {
 }
 
 function createIconFromBookmark (bookmark) {
-  let iconHTML = ``;
-  let text = bookmark.title;
-  let bookmarkID = bookmark.id;
-  if (!bookmark.children) {
-    let url = bookmark.url;
-    let faviconString = `chrome://favicon/${url}`
-    iconHTML =
-    `<a class="bt-shortcut ${bookmarkID}" target="_blank" href="${url}">
-      <div class="icon-pic">
-        <img src=${faviconString}>
-      </div>
-      <div class="shortcut-text">
-        <p>${text}</p>
-      </div>
-    </a>`;
-  } else if (Array.isArray(bookmark.children)) {
-    let folderIcon = `<img class="icon icons8-Folder" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNDAgNDAiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQwIDQwOyIgZmlsbD0iI2ZhbHNlIiA+PGc+CTxwb2x5Z29uIHN0eWxlPSJmaWxsOiNEQkIwNjU7IiBwb2ludHM9IjEuNSwzNS41IDEuNSw0LjUgMTEuNzkzLDQuNSAxNC43OTMsNy41IDM4LjUsNy41IDM4LjUsMzUuNSAJIj48L3BvbHlnb24+CTxnPgkJPHBhdGggc3R5bGU9ImZpbGw6Izk2N0E0NDsiIGQ9Ik0xMS41ODYsNWwyLjcwNywyLjcwN0wxNC41ODYsOEgxNWgyM3YyN0gyVjVIMTEuNTg2IE0xMiw0SDF2MzJoMzhWN0gxNUwxMiw0TDEyLDR6Ij48L3BhdGg+CTwvZz48L2c+PGc+CTxwb2x5Z29uIHN0eWxlPSJmaWxsOiNGNUNFODU7IiBwb2ludHM9IjEuNSwzNS41IDEuNSw5LjUgMTIuMTUxLDkuNSAxNS4xNTEsNy41IDM4LjUsNy41IDM4LjUsMzUuNSAJIj48L3BvbHlnb24+CTxnPgkJPHBhdGggc3R5bGU9ImZpbGw6Izk2N0E0NDsiIGQ9Ik0zOCw4djI3SDJWMTBoMTBoMC4zMDNsMC4yNTItMC4xNjhMMTUuMzAzLDhIMzggTTM5LDdIMTVsLTMsMkgxdjI3aDM4VjdMMzksN3oiPjwvcGF0aD4JPC9nPjwvZz48L3N2Zz4='/>`
-    iconHTML =
-    `<a class="bt-shortcut folder ${bookmarkID}" href="#">
-      <div class="icon-pic" style="background: rgba(255,255,255,0)">
-        ${folderIcon}
-      </div>
-      <div class="shortcut-text">
-        <p>${text}</p>
-      </div>
-    </a>`
+  if (!bookmark.hidden) {
+    let iconHTML = ``;
+    let text = bookmark.title;
+    let bookmarkID = bookmark.id;
+    if (!bookmark.children) {
+      let url = bookmark.url;
+      let faviconString = `chrome://favicon/${url}`
+      iconHTML =
+      `<a class="bt-shortcut ${bookmarkID}" draggable="true" target="_blank" href="${url}">
+        <div class="icon-pic">
+          <img src=${faviconString}>
+        </div>
+        <div class="shortcut-text">
+          <p>${text}</p>
+        </div>
+      </a>`;
+    } else if (Array.isArray(bookmark.children)) {
+      let folderIcon = `<img class="icon icons8-Folder" src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNDAgNDAiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQwIDQwOyIgZmlsbD0iI2ZhbHNlIiA+PGc+CTxwb2x5Z29uIHN0eWxlPSJmaWxsOiNEQkIwNjU7IiBwb2ludHM9IjEuNSwzNS41IDEuNSw0LjUgMTEuNzkzLDQuNSAxNC43OTMsNy41IDM4LjUsNy41IDM4LjUsMzUuNSAJIj48L3BvbHlnb24+CTxnPgkJPHBhdGggc3R5bGU9ImZpbGw6Izk2N0E0NDsiIGQ9Ik0xMS41ODYsNWwyLjcwNywyLjcwN0wxNC41ODYsOEgxNWgyM3YyN0gyVjVIMTEuNTg2IE0xMiw0SDF2MzJoMzhWN0gxNUwxMiw0TDEyLDR6Ij48L3BhdGg+CTwvZz48L2c+PGc+CTxwb2x5Z29uIHN0eWxlPSJmaWxsOiNGNUNFODU7IiBwb2ludHM9IjEuNSwzNS41IDEuNSw5LjUgMTIuMTUxLDkuNSAxNS4xNTEsNy41IDM4LjUsNy41IDM4LjUsMzUuNSAJIj48L3BvbHlnb24+CTxnPgkJPHBhdGggc3R5bGU9ImZpbGw6Izk2N0E0NDsiIGQ9Ik0zOCw4djI3SDJWMTBoMTBoMC4zMDNsMC4yNTItMC4xNjhMMTUuMzAzLDhIMzggTTM5LDdIMTVsLTMsMkgxdjI3aDM4VjdMMzksN3oiPjwvcGF0aD4JPC9nPjwvZz48L3N2Zz4='/>`
+      iconHTML =
+      `<a class="bt-shortcut folder ${bookmarkID}" draggable="true" href="#">
+        <div class="icon-pic" style="background: rgba(255,255,255,0)">
+          ${folderIcon}
+        </div>
+        <div class="shortcut-text">
+          <p>${text}</p>
+        </div>
+      </a>`
+    }
+    return iconHTML;
   }
-  return iconHTML;
+  return '';
 }
 
 function addBookmarkToFolder (bookmarkId, folderId) {
@@ -82,12 +85,12 @@ function createFolderLinks () {
   }
 }
 
-function fillFolder (subTreeId, browsertopSpace, linkCreationFunction = createFolderLinks) {
+function fillFolder (subTreeId, browsertopSpace, literallyEverythingElse) {
   chrome.bookmarks.getSubTree(subTreeId, function(mark) {
     for (let i = 0; i < mark[0].children.length; i++) {
       browsertopSpace.innerHTML += createIconFromBookmark(mark[0].children[i]);
     }
-    linkCreationFunction();
+    literallyEverythingElse();
   })
 }
 
@@ -103,7 +106,34 @@ function populateFolderHTML () {
   fillFolder(folderNode, folderSpace);
 }
 
-function storeBaseWindow () {
-  let currentWindow = window.
-  localStorage.setItem('originalWindow', JSON.stringify(''))
+
+/*
+function addBookmarkWithoutAskingLol (parentNode = '1') {
+
+}
+
+function deleteBookmarkWithoutAsking (bookmarkId) {
+  chrome.bookmarks.remove(bookmarkId);
+}
+
+function hideBookmarkWithoutAsking (bookmarkId) {
+
+}
+
+function unhideBookmarkWithoutAsking (bookmarkId) {
+
+}
+*/
+function handleDragStart (event) {
+  event.target.style.opacity = '0.4';
+}
+
+function setDrags () {
+  let shortcuts = document.getElementsByClassName('bt-shortcut');
+  console.log(shortcuts);
+  console.log(shortcuts.length);
+  for (let i = 0; i < shortcuts.length; i++) {
+    console.log(`setting listener ${i+1}`)
+    shortcuts[i].addEventListener('dragstart', handleDragStart);
+  }
 }

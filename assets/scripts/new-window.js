@@ -1,1 +1,3 @@
 populateFolderHTML();
+
+setDrags();

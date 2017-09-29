@@ -19,3 +19,5 @@ sizeBrowsertop();
 createContextItems();
 
 fillFolder('1', browsertop);
+
+setDrags();
