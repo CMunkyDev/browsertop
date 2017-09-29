@@ -65,10 +65,12 @@ table {
   margin: 12px auto 3px auto;
   border-radius: 50%;
   background: rgba(255,255,255,1);
+	pointer-events: none;
 }
 
 .icon-pic img {
   align-self: center;
+	pointer-events: none;
 }
 
 .shortcut-text {
@@ -77,6 +79,7 @@ table {
   height: 33px;
   overflow: visible;
   font-size: 12px;
+	pointer-events: none;
 }
 #browsertop-container {
   background: #008080;
