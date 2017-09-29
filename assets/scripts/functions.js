@@ -134,6 +134,7 @@ function setFolderOnlyListeners () {
   let folders = document.getElementsByClassName('folder');
   for (let i = 0; i < folders.length; i++) {
     folders[i].addEventListener('drop', handleDrop);
+    folders[i].addEventListener('dragover', handleDragOver);
   }
 }
 
@@ -143,32 +144,24 @@ function setFolderSpaceListener () {
 }
 
 function handleDrop(event) {
+  event.preventDefault();
+  event.stopPropagation();
   console.log('lol im in boss')
-  // if (event.stopPropagation) {
-  //   event.stopPropagation();
-  // }
   if (dragSource !== event.target) {
-    let draggedNode = event.transferData.getData('markNode');
+    let draggedNode = event.dataTransfer.getData('markNode');
     let targetFolder = getIdFromElement(event.target);
-    console.log('dragNode:', draggedNode);
-    console.log('targetFolderNode:', targetFolder);
+    chrome.bookmarks.move(draggedNode, {'parentId':targetFolder});
+    dragSource.parentNode.removeChild(dragSource);
   }
 }
 
 function handleDragEnd (event) {
   event.target.style.opacity = '1';
 }
-
-function handleDragOver(event) {
-  if (event.preventDefault) {
-    event.preventDefault();
-  }
+function handleDragOver (event) {
+  event.preventDefault();
+  event.dataTransfer.dropEffect = 'move';
 }
-
-function handleDrag (event) {
-
-}
-
 function handleDragStart (event) {
   dragSource = event.target;
   event.target.style.opacity = '0.4';
@@ -177,10 +170,14 @@ function handleDragStart (event) {
   //console.log(event.dataTransfer.getData('markNode'));
 }
 
-function handleDelete (nodeToKill) {
+function removeNodeElement (nodeToKill) {
   let elementTarget = document.querySelector(`._${nodeToKill}`);
-  chrome.bookmarks.remove(nodeToKill);
   elementTarget.parentNode.removeChild(elementTarget);
+}
+
+function handleDelete (nodeToKill) {
+  chrome.bookmarks.remove(nodeToKill);
+  removeNodeElement(nodeToKill);
 }
 
 chrome.contextMenus.onClicked.addListener(function (event) {
