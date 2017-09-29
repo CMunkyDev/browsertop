@@ -17,15 +17,13 @@ function removeContextItems () {
 }
 
 function createContextItems () {
+  let urlPatterns = ['chrome://newtab/','chrome-extension://gidieppmajpbcdipahgchfpedgihomki/*'];
   if (!JSON.parse(localStorage.getItem('contextCreated'))) {
-    chrome.contextMenus.create({'id':'create-bookmark', 'title':'Create New Bookmark', 'onclick':function () {
-      console.log('lol like I would.')
-      }
-    });
+    chrome.contextMenus.create({'id':'create-bookmark', 'title':'Create New Bookmark', 'documentUrlPatterns':urlPatterns});
 
-    chrome.contextMenus.create({'id':'remove-bookmark', 'title':'Remove Bookmark', 'contexts':['link']});
+    chrome.contextMenus.create({'id':'remove-bookmark', 'title':'Remove Bookmark', 'contexts':['link'], 'documentUrlPatterns':urlPatterns});
 
-    chrome.contextMenus.create({'id':'hide-bookmark', 'title':'Hide Bookmark', 'contexts':['link']});
+    chrome.contextMenus.create({'id':'hide-bookmark', 'title':'Hide Bookmark', 'contexts':['link'], 'documentUrlPatterns':urlPatterns});
 
     localStorage.setItem('contextCreated', JSON.stringify(true));
   }
@@ -76,11 +74,7 @@ function openFolder (subTreeId) {
 
 function createFolderLinks () {
   var allFolders = document.querySelectorAll('.folder');
-  console.log('in createFolderLinks');
-  console.log('allFolders:', allFolders);
-  console.log('allFolders.length:', allFolders.length);
   for (let i = 0; i < allFolders.length; i++) {
-    console.log('got in the loop!');
     allFolders[i].addEventListener('click', function (event) {
       let bookmarkId = allFolders[i].classList[allFolders[i].classList.length - 1];
       openFolder(bookmarkId);
