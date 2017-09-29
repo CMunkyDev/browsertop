@@ -1,4 +1,6 @@
 var currentMark = '';
+var dragSource = null;
+var bookmarkStateObject = JSON.parse(localStorage.getItem('bookmarkState')) || {};
 function sizeBrowsertop () {
   let menuHeight = menu.clientHeight;
   let totalHeight = totalContainer.clientHeight;
@@ -23,7 +25,11 @@ function createContextItems () {
 
     chrome.contextMenus.create({'id':'remove-bookmark', 'title':'Remove Bookmark', 'contexts':['link'], 'documentUrlPatterns':urlPatterns});
 
-    chrome.contextMenus.create({'id':'hide-bookmark', 'title':'Hide Bookmark', 'contexts':['link'], 'documentUrlPatterns':urlPatterns});
+    chrome.contextMenus.create({'id':'hide', 'title':'Hide', 'contexts':['link'], 'documentUrlPatterns':urlPatterns});
+
+    chrome.contextMenus.create({'id':'show-hidden', 'title':'Show Hidden Items', 'contexts':['link'], 'documentUrlPatterns':urlPatterns});
+
+    chrome.contextMenus.create({'id':'unhide', 'title':'Un-hide', 'contexts':['link'], 'documentUrlPatterns':urlPatterns});
 
     localStorage.setItem('contextCreated', JSON.stringify(true));
   }
@@ -93,7 +99,10 @@ function fillFolder (subTreeId, browsertopSpace, linkCreationFunction = createFo
       browsertopSpace.innerHTML += createIconFromBookmark(mark[0].children[i]);
     }
     linkCreationFunction();
-    setDragSettings();
+    setShortcutListeners();
+    setFolderOnlyListeners();
+    setFolderSpaceListener();
+
   })
 }
 
@@ -109,24 +118,51 @@ function populateFolderHTML () {
   fillFolder(folderNode, folderSpace);
 }
 
-function setDragSettings() {
+function setShortcutListeners () {
   let shortcuts = document.getElementsByClassName('bt-shortcut');
   for (let i = 0; i < shortcuts.length; i++) {
     shortcuts[i].addEventListener('dragstart', handleDragStart);
     shortcuts[i].addEventListener('dragend', handleDragEnd);
     shortcuts[i].addEventListener('contextmenu', function (event) {
-      currentMark = convertMarkClass(event.currentTarget.classList[event.currentTarget.classList.length - 1]);
+      currentMark = getIdFromElement(event.currentTarget);
       console.log(currentMark);
     })
   }
 }
 
-function handleDragOver(e) {
-  if (e.preventDefault) {
-    e.preventDefault();
+function setFolderOnlyListeners () {
+  let folders = document.getElementsByClassName('folder');
+  for (let i = 0; i < folders.length; i++) {
+    folders[i].addEventListener('drop', handleDrop);
   }
-  e.dataTransfer.dropEffect = 'move';
-  return false;
+}
+
+function setFolderSpaceListener () {
+  let backdrop = document.querySelector('.folder-container');
+  backdrop.addEventListener('drop', handleDrop);
+}
+
+function handleDrop(event) {
+  console.log('lol im in boss')
+  // if (event.stopPropagation) {
+  //   event.stopPropagation();
+  // }
+  if (dragSource !== event.target) {
+    let draggedNode = event.transferData.getData('markNode');
+    let targetFolder = getIdFromElement(event.target);
+    console.log('dragNode:', draggedNode);
+    console.log('targetFolderNode:', targetFolder);
+  }
+}
+
+function handleDragEnd (event) {
+  event.target.style.opacity = '1';
+}
+
+function handleDragOver(event) {
+  if (event.preventDefault) {
+    event.preventDefault();
+  }
 }
 
 function handleDrag (event) {
@@ -134,13 +170,11 @@ function handleDrag (event) {
 }
 
 function handleDragStart (event) {
+  dragSource = event.target;
   event.target.style.opacity = '0.4';
-  event.dataTransfer.setData('markNode', event.target.classList[event.target.classList.length - 1]);
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('markNode', getIdFromElement(event.target));
   //console.log(event.dataTransfer.getData('markNode'));
-}
-
-function handleDragEnd (event) {
-  event.target.style.opacity = '1';
 }
 
 function handleDelete (nodeToKill) {
