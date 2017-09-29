@@ -6,10 +6,6 @@ function sizeBrowsertop () {
   browsertop.style.height = `${browsertopHeight}px`
 }
 
-function convertMarkClass (markClass) {
-  return markClass.slice(1);
-}
-
 function removeContextItems () {
   chrome.contextMenus.remove('create-bookmark');
 
@@ -61,7 +57,7 @@ function createIconFromBookmark (bookmark) {
       </div>
     </a>`
   }
-  return '';
+  return iconHTML;
 }
 
 
@@ -69,8 +65,12 @@ function addBookmarkToFolder (bookmarkId, folderId) {
   chrome.bookmarks.move(bookmarkId, folderId);
 }
 
+function convertMarkClass (markClass) {
+  return markClass.slice(1);
+}
+
 function getIdFromElement (element) {
-  return element.classList[element.classList.length-1];
+  return element.classList[element.classList.length-1].slice(1);
 }
 
 function openFolder (subTreeId) {
@@ -87,7 +87,7 @@ function createFolderLinks () {
   }
 }
 
-function fillFolder (subTreeId, browsertopSpace, literallyEverythingElse) {
+function fillFolder (subTreeId, browsertopSpace, linkCreationFunction = createFolderLinks) {
   chrome.bookmarks.getSubTree(subTreeId, function(mark) {
     for (let i = 0; i < mark[0].children.length; i++) {
       browsertopSpace.innerHTML += createIconFromBookmark(mark[0].children[i]);
