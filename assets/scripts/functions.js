@@ -1,6 +1,9 @@
-var currentMark = '';
+var dragItem = null;
 var dragSource = null;
+var preventDrop = false;
+var currentMark = '';
 var bookmarkStateObject = JSON.parse(localStorage.getItem('bookmarkState')) || {};
+
 function sizeBrowsertop () {
   let menuHeight = menu.clientHeight;
   let totalHeight = totalContainer.clientHeight;
@@ -80,14 +83,14 @@ function getIdFromElement (element) {
 }
 
 function openFolder (subTreeId) {
-  return window.open("new-window.html", `Folder${subTreeId}`,"width=500,height=300,scrollbar=yes")
+  return window.open("new-window.html", `Folder_${subTreeId}`,"width=500,height=300,scrollbar=yes")
 }
 
 function createFolderLinks () {
   var allFolders = document.querySelectorAll('.folder');
   for (let i = 0; i < allFolders.length; i++) {
     allFolders[i].addEventListener('click', function (event) {
-      let bookmarkId = allFolders[i].classList[allFolders[i].classList.length - 1];
+      let bookmarkId = getIdFromElement(allFolders[i]);
       openFolder(bookmarkId);
     });
   }
@@ -125,7 +128,6 @@ function setShortcutListeners () {
     shortcuts[i].addEventListener('dragend', handleDragEnd);
     shortcuts[i].addEventListener('contextmenu', function (event) {
       currentMark = getIdFromElement(event.currentTarget);
-      console.log(currentMark);
     })
   }
 }
@@ -141,32 +143,52 @@ function setFolderOnlyListeners () {
 function setFolderSpaceListener () {
   let backdrop = document.querySelector('.folder-container');
   backdrop.addEventListener('drop', handleDrop);
+  backdrop.addEventListener('dragover', handleDragOver);
+  backdrop.addEventListener('click', function () {
+    chrome.bookmarks.getSubTree(getIdFromElement(backdrop), function (tree) {
+      console.log(tree[0].children);
+    })
+  })
 }
 
 function handleDrop(event) {
   event.preventDefault();
   event.stopPropagation();
-  console.log('lol im in boss')
   if (dragSource !== event.target) {
     let draggedNode = event.dataTransfer.getData('markNode');
+    console.log(draggedNode);
     let targetFolder = getIdFromElement(event.target);
+    if (event.target.classList.contains('folder-container')) {
+      event.target.innerHTML += (event.dataTransfer.getData('sourceEl'))
+
+    }
     chrome.bookmarks.move(draggedNode, {'parentId':targetFolder});
-    dragSource.parentNode.removeChild(dragSource);
   }
 }
 
 function handleDragEnd (event) {
   event.target.style.opacity = '1';
+  chrome.bookmarks.get(getIdFromElement(event.target), function (mark) {
+    if (mark[0].parentId !== getIdFromElement(event.target.parentNode)) {
+      event.target.parentNode.removeChild(event.target);
+    }
+  })
 }
+
 function handleDragOver (event) {
   event.preventDefault();
   event.dataTransfer.dropEffect = 'move';
 }
+
 function handleDragStart (event) {
-  dragSource = event.target;
-  event.target.style.opacity = '0.4';
+  dragSource = event.target.parentNode;
   event.dataTransfer.effectAllowed = 'move';
   event.dataTransfer.setData('markNode', getIdFromElement(event.target));
+  console.log(event.dataTransfer.getData('markNode'));
+  event.dataTransfer.setData('sourceEl', event.target.outerHTML);
+  event.dataTransfer.setData('sourceNode', getIdFromElement(event.target.parentNode));
+  event.target.style.opacity = '0.4';
+
   //console.log(event.dataTransfer.getData('markNode'));
 }
 

@@ -14,6 +14,8 @@ chrome.runtime.onInstalled.addListener(function(details) {
   }
 })
 
+window.name = 'browsertop_1';
+
 sizeBrowsertop();
 
 createContextItems();
