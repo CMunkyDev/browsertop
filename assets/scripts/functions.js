@@ -172,17 +172,20 @@ function setFolderSpaceListener () {
 function handleDrop(event) {
   event.preventDefault();
   event.stopPropagation();
-  console.log(dragSource);
   if (dragSource !== event.target && (event.target.classList.contains('folder-container') || event.target.classList.contains('folder'))) {
     let draggedNode = event.dataTransfer.getData('markNode');
-    console.log(draggedNode);
     let targetFolder = getIdFromElement(event.target);
     if (event.target.classList.contains('folder-container')) {
       event.target.innerHTML += (event.dataTransfer.getData('sourceEl'));
       resetListeners(event.target);
     }
     if (event.target.classList.contains('folder')) {
-
+      let openWindows = chrome.extension.getViews();
+      for (let i = 0; i < openWindows.length; i++) {
+        if (targetFolder == openWindows[i].name.split('_')[1]) {
+          openFolder(targetFolder);
+        }
+      }
     }
     chrome.bookmarks.move(draggedNode, {'parentId':targetFolder});
   }
@@ -207,13 +210,9 @@ function handleDragOver (event) {
 }
 
 function handleDragStart (event) {
-  console.log('dragStart happening!');
   dragSource = event.target.parentNode;
-  console.log(dragSource);
   event.dataTransfer.effectAllowed = 'move';
-  console.log('getIdFromElement: ', getIdFromElement(event.target))
   event.dataTransfer.setData('markNode', getIdFromElement(event.target));
-  console.log('same id from dataTransfer: ', event.dataTransfer.getData('markNode'));
   event.dataTransfer.setData('sourceEl', event.target.outerHTML);
   event.dataTransfer.setData('sourceNode', getIdFromElement(event.target.parentNode));
   event.target.style.opacity = '0.4';
