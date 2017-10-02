@@ -1,6 +1,4 @@
-var dragItem = null;
 var dragSource = null;
-var preventDrop = false;
 var currentMark = '';
 var bookmarkStateObject = JSON.parse(localStorage.getItem('bookmarkState')) || {};
 
@@ -14,9 +12,15 @@ function sizeBrowsertop () {
 function removeContextItems () {
   chrome.contextMenus.remove('create-bookmark');
 
+  chrome.contextMenus.remove('customize-appearance');
+
   chrome.contextMenus.remove('remove-bookmark');
 
   chrome.contextMenus.remove('hide-bookmark');
+
+  chrome.contextMenus.remove('show-hidden');
+
+  chrome.contextMenus.remove('unhide');
 
   localStorage.setItem('contextCreated', JSON.stringify(false));
 }
@@ -25,6 +29,8 @@ function createContextItems () {
   let urlPatterns = ['chrome://newtab/','chrome-extension://gidieppmajpbcdipahgchfpedgihomki/*'];
   if (!JSON.parse(localStorage.getItem('contextCreated'))) {
     chrome.contextMenus.create({'id':'create-bookmark', 'title':'Create New Bookmark', 'documentUrlPatterns':urlPatterns});
+
+    chrome.contextMenus.create({'id':'customize-appearance', 'title':'Customize Appearance', 'documentUrlPatterns':urlPatterns});
 
     chrome.contextMenus.create({'id':'remove-bookmark', 'title':'Remove Bookmark', 'contexts':['link'], 'documentUrlPatterns':urlPatterns});
 
@@ -101,11 +107,7 @@ function fillFolder (subTreeId, browsertopSpace, linkCreationFunction = createFo
     for (let i = 0; i < mark[0].children.length; i++) {
       browsertopSpace.innerHTML += createIconFromBookmark(mark[0].children[i]);
     }
-    linkCreationFunction();
-    setShortcutListeners();
-    setFolderOnlyListeners();
-    setFolderSpaceListener();
-
+    setListeners();
   })
 }
 
@@ -119,6 +121,22 @@ function populateFolderHTML () {
     folderContain.classList.add(`_${folderNode}`)
   });
   fillFolder(folderNode, folderSpace);
+}
+
+function resetListeners (folderNode) {
+  let temp = folderNode.cloneNode(true);
+  folderNode.parentNode.replaceChild(temp, folderNode);
+  setShortcutListeners();
+  setFolderOnlyListeners();
+  setFolderSpaceListener();
+  createFolderLinks();
+}
+
+function setListeners () {
+  setShortcutListeners();
+  setFolderOnlyListeners();
+  setFolderSpaceListener();
+  createFolderLinks();
 }
 
 function setShortcutListeners () {
@@ -154,25 +172,33 @@ function setFolderSpaceListener () {
 function handleDrop(event) {
   event.preventDefault();
   event.stopPropagation();
-  if (dragSource !== event.target) {
+  console.log(dragSource);
+  if (dragSource !== event.target && (event.target.classList.contains('folder-container') || event.target.classList.contains('folder'))) {
     let draggedNode = event.dataTransfer.getData('markNode');
     console.log(draggedNode);
     let targetFolder = getIdFromElement(event.target);
     if (event.target.classList.contains('folder-container')) {
-      event.target.innerHTML += (event.dataTransfer.getData('sourceEl'))
+      event.target.innerHTML += (event.dataTransfer.getData('sourceEl'));
+      resetListeners(event.target);
+    }
+    if (event.target.classList.contains('folder')) {
 
     }
     chrome.bookmarks.move(draggedNode, {'parentId':targetFolder});
   }
+  //dragSource = null;
 }
 
+
 function handleDragEnd (event) {
+  event.preventDefault();
   event.target.style.opacity = '1';
   chrome.bookmarks.get(getIdFromElement(event.target), function (mark) {
     if (mark[0].parentId !== getIdFromElement(event.target.parentNode)) {
       event.target.parentNode.removeChild(event.target);
     }
   })
+  dragSource = null;
 }
 
 function handleDragOver (event) {
@@ -181,14 +207,16 @@ function handleDragOver (event) {
 }
 
 function handleDragStart (event) {
+  console.log('dragStart happening!');
   dragSource = event.target.parentNode;
+  console.log(dragSource);
   event.dataTransfer.effectAllowed = 'move';
+  console.log('getIdFromElement: ', getIdFromElement(event.target))
   event.dataTransfer.setData('markNode', getIdFromElement(event.target));
-  console.log(event.dataTransfer.getData('markNode'));
+  console.log('same id from dataTransfer: ', event.dataTransfer.getData('markNode'));
   event.dataTransfer.setData('sourceEl', event.target.outerHTML);
   event.dataTransfer.setData('sourceNode', getIdFromElement(event.target.parentNode));
   event.target.style.opacity = '0.4';
-
   //console.log(event.dataTransfer.getData('markNode'));
 }
 
@@ -206,11 +234,19 @@ chrome.contextMenus.onClicked.addListener(function (event) {
   switch (event.menuItemId) {
     case 'create-bookmark':
     break;
-    case 'hide-bookmark':
-    break;
     case 'remove-bookmark':
     handleDelete(currentMark);
     currentMark = '';
+    break;
+    case 'hide':
+    currentMark = '';
+    break;
+    case 'show-hidden':
+    break;
+    case 'unhide':
+    currentMark = '';
+    break;
+    case 'customize-appearance':
     break;
     default:
     currentMark = '';
