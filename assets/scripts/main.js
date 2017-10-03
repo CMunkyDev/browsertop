@@ -2,7 +2,6 @@ let browsertop = document.querySelector('.browsertop');
 let menu = document.querySelector('#menu-container');
 let totalContainer = document.querySelector('#browsertop-container');
 let heldBookmark;
-
 window.addEventListener('resize', sizeBrowsertop);
 
 chrome.runtime.onInstalled.addListener(function(details) {
@@ -16,8 +15,9 @@ chrome.runtime.onInstalled.addListener(function(details) {
 
 window.name = 'browsertop_1';
 
-sizeBrowsertop();
-
+//if menu container is on bottom, use:
+//sizeBrowsertop();
+injectBackgroundMenu(menu);
 createContextItems();
-
+setAppearanceFormListeners();
 fillFolder('1', browsertop);

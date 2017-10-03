@@ -82,6 +82,7 @@ table {
   font-size: 12px;
 	pointer-events: none;
 }
+
 #browsertop-container {
   background: #008080;
   width: 100%;
@@ -89,15 +90,57 @@ table {
 }
 
 #menu-container {
+	display: none;
   position: fixed;
-  bottom: 0;
-  height: 5vh;
+  right: 0;
+	top: 0;
+	padding: 1vh 1%;
+  /*height: 5vh;
   min-height: 36px;
-  max-height: 72px;
-  width: 100%;
-  background: #BFBFC1;
+  max-height: 72px;*/
+	z-index: 10;
+	width: 20%;
+	min-width: 250px;
+  height: 100vh;
+  background: #2d2d2d;
+	color: #ddd;
+	line-height: 2rem;
 }
 
+.background-image-settings {
+	display: none;
+}
+
+h2 {
+	font-size: 1.6rem;
+	margin: 1rem 0;
+}
+
+h3 {
+	font-size: 1.4rem;
+	margin: 0.5rem 0;
+}
+
+h4 {
+	font-size: 1.2rem;
+	margin: 0.5rem 0;
+}
+
+fieldset {
+	line-height: 1.5rem;
+	margin: .5rem;
+}
+
+.background-image-settings input {
+  display: relative;
+	float: left;
+	clear: left;
+}
+.background-image-settings label {
+	display: relative;
+	float: left;
+	clear: right;
+}
 .icons8-Folder { /* Customizes Folder icon */
   width: 50px;
   height: 50px;
@@ -112,6 +155,9 @@ table {
   width: 100%;
   height: 100vh;
   background: pink;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 
 .browsertop {
@@ -123,4 +169,7 @@ table {
   overflow-y: scroll;
   overflow-x: scroll;
 	background: #008080;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size: contain;
 }
