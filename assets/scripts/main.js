@@ -17,7 +17,9 @@ window.name = 'browsertop_1';
 
 //if menu container is on bottom, use:
 //sizeBrowsertop();
+//getAppearance();
 injectBackgroundMenu(menu);
 createContextItems();
 setAppearanceFormListeners();
+getAppearance();
 fillFolder('1', browsertop);
