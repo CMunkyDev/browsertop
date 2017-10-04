@@ -22,7 +22,7 @@ function getAppearance () {
        bgNaturalWidth: '',
        bgNaturalHeight: '',
        sliderValue: '100',
-       bgColor: '#000000',
+       bgColor: '#222222',
        folderColor: '#2d2d2d',
        radioValue: '',
        radioId: 'bg-contain'
