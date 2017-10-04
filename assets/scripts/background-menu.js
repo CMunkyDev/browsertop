@@ -27,10 +27,10 @@ function getAppearance () {
        radioValue: '',
        radioId: 'bg-contain'
       }
-      console.log('Failed to find saved appearance.')
+      //console.log('Failed to find saved appearance.')
     } else {
       savedAppearance = bagOfHolding['appearance'];
-      console.log('Successfully retrieved saved appearance.')
+      //console.log('Successfully retrieved saved appearance.')
     }
     renderAppearance();
   })
@@ -52,8 +52,8 @@ function convertPercentsToPixels (percentH, percentW, sliderPercent, parentEleme
   let parentHeight = parentElement.clientHeight;
   finalWidthInPx = percentW * (sliderPercent/100) * parentWidth;
   finalHeightInPx = percentH * (sliderPercent/100) * parentHeight;
-  console.log('finalWPx: ', finalWidthInPx);
-  console.log('finalHPx: ', finalWidthInPx);
+  //console.log('finalWPx: ', finalWidthInPx);
+  //console.log('finalHPx: ', finalWidthInPx);
 }
 
 function calculateStartingPercent (origHeight, origWidth, parentElement) {
@@ -61,8 +61,8 @@ function calculateStartingPercent (origHeight, origWidth, parentElement) {
   let parentHeight = parentElement.clientHeight;
   widthPercent = (origWidth / parentWidth);
   heightPercent = (origHeight / parentHeight);
-  console.log('cal width: ', widthPercent);
-  console.log('cal height: ', heightPercent);
+  //console.log('cal width: ', widthPercent);
+  //console.log('cal height: ', heightPercent);
 }
 
 let menuHTML = `<label for='appearance-form'><h2>Customize Appearance</h2></label>
@@ -72,9 +72,9 @@ let menuHTML = `<label for='appearance-form'><h2>Customize Appearance</h2></labe
     <label for='use-image'>Use Background Image?</label>
     <input type='checkbox' id='use-image'>
     <fieldset class='background-image-settings'>
-      <legend><h4>Choose or Link Image</h4></legend>
-      <label for='background-image'>Choose</label>
-      <input type='file' id='background-image' accept='image/*'>
+      <legend><h4><!--Choose or -->Link Image</h4></legend>
+      <!--<label for='background-image'>Choose</label>
+      <input type='file' id='background-image' accept='image/*'>-->
       <label for='image-link'>Link</label>
       <input type='url' id='image-link'>
     </fieldset>
@@ -130,13 +130,13 @@ function injectBackgroundMenu(container) {
 function extractImageDimensions(url) {
   let image = document.createElement('img');
   image.src = url;
-  console.log('image: ', image);
+  //console.log('image: ', image);
   bgOrigHeight = image.naturalHeight;
   bgOrigWidth = image.naturalWidth;
   savedAppearance.bgNaturalWidth = image.naturalWidth;
   savedAppearance.bgNaturalHeight = image.naturalHeight;
-  console.log('natHeight: ', bgOrigHeight);
-  console.log('natWidth: ', bgOrigWidth);
+  //console.log('natHeight: ', bgOrigHeight);
+  //console.log('natWidth: ', bgOrigWidth);
   //remove image?
 }
 
@@ -155,7 +155,7 @@ function returnRadioValue (radioParent) {
       return buttons[i].value;
     }
   }
-  console.log('returnRadioValue couldn\'t find a checked radio button');
+  //console.log('returnRadioValue couldn\'t find a checked radio button');
   return null;
 }
 
@@ -303,7 +303,7 @@ function renderAppearance(appearanceObject = savedAppearance, parentElement = br
   var bgColorPick = document.getElementById('background-color');
   var imageCheck = document.getElementById('use-image');
   var bgImageSettings = document.getElementsByClassName('background-image-settings');
-  console.log(bgImageSettings);
+  //console.log(bgImageSettings);
   var bgURL = document.getElementById('image-link');
   var currentRadio = document.getElementById(appearanceObject.radioId);
   if (appearanceObject.useImage) {

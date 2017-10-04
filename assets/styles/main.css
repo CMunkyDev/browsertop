@@ -52,7 +52,7 @@ table {
   flex-flow: column nowrap;
   background-color: rgba(255,0,0,0.0);
   width: 72px;
-  height: 100px;
+  height: 105px;
   margin: 2px;
   overflow: hidden;
   cursor: pointer;
@@ -77,8 +77,9 @@ table {
 
 .shortcut-text {
   text-align: center;
+	line-height: 0.9rem;
   width: 72px;
-  height: 33px;
+  height: 38px;
   overflow: visible;
   font-size: 12px;
 	pointer-events: none;
