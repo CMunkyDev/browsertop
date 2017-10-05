@@ -76,6 +76,15 @@ function fillFolder (subTreeId, browsertopSpace, linkCreationFunction = createFo
   })
 }
 
+function popupPrompt (header, prompt, value = '') {
+  var promptHTML = ``
+}
+
+function createMarkAtLocation (name, parentNode, url = null) {
+  let parentId = getMarkFromElement(parentNode);
+  chrome.bookmarks.create({'parentId': parentId, 'title':name, 'url':url});
+};
+
 function populateFolderHTML () {
   let folderNode = window.name.split('_')[1];
   var title = document.querySelector('title');

@@ -243,6 +243,7 @@ function setAppearanceFormListeners () {
 
   bgSizeSlider.addEventListener('change', function (event) {
     if (currentImageDisplay == 'percent') {
+      calculateStartingPercent(savedAppearance.bgNaturalHeight, savedAppearance.bgNaturalWidth, browsertop);
       convertPercentsToPixels(heightPercent, widthPercent,bgSizeSlider.value,browsertop);
       browsertop.style.backgroundSize = `${finalWidthInPx}px ${finalHeightInPx}px`;
       savedAppearance.bgSize = `${finalWidthInPx}px ${finalHeightInPx}px`;
