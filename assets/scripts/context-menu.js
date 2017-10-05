@@ -15,7 +15,8 @@ function removeContextItems () {
 }
 
 function createContextItems () {
-  let urlPatterns = ['chrome://newtab/','chrome-extension://gidieppmajpbcdipahgchfpedgihomki/*'];
+  let extensionURL = chrome.runtime.getURL('index.html');
+  let urlPatterns = ['chrome://newtab/',`${extensionURL}/*`];
   if (!JSON.parse(localStorage.getItem('contextCreated'))) {
     /*chrome.contextMenus.create({'id':'create-bookmark', 'title':'Create New Bookmark', 'documentUrlPatterns':urlPatterns});*/
 
