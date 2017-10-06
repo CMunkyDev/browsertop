@@ -1,20 +1,21 @@
 function removeContextItems () {
-  chrome.contextMenus.remove('create-bookmark');
+  // chrome.contextMenus.remove('create-bookmark');
 
   chrome.contextMenus.remove('customize-appearance');
 
   chrome.contextMenus.remove('remove-bookmark');
 
-  chrome.contextMenus.remove('hide-bookmark');
-
-  chrome.contextMenus.remove('show-hidden');
-
-  chrome.contextMenus.remove('unhide');
+  // chrome.contextMenus.remove('hide-bookmark');
+  //
+  // chrome.contextMenus.remove('show-hidden');
+  //
+  // chrome.contextMenus.remove('unhide');
 
   localStorage.setItem('contextCreated', JSON.stringify(false));
 }
 
 function createContextItems () {
+  removeContextItems();
   let extensionURL = chrome.runtime.getURL('index.html');
   let urlPatterns = ['chrome://newtab/',`${extensionURL}/*`];
   if (!JSON.parse(localStorage.getItem('contextCreated'))) {
