@@ -1,4 +1,4 @@
-#Browsertop
+# Browsertop
 > An easy way to make your new tabs personal and relevant.
 
 Browsertop is a chrome extension built to organize ones bookmarks and customize new tab pages. Users can:
